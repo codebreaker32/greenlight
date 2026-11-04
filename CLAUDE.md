@@ -16,6 +16,8 @@ Hard constraints (verified in Switch source):
 - Agents cannot create agents; addressing must be "anyone"; the task-delegation protocol is not ready, so don't use it.
 - No scheduler, no message edits; Slack shows markdown tables as raw text → use bullets.
 - Templates: follow examples/agent-templates/support-desk.template.yaml in the Switch repo.
+- Claude only: Claude Code (subscription) + OpenCode with ANTHROPIC_API_KEY for 2 reviewers. Stretch: greenlight-builder
+  (Claude Code) and greenlight-ci (GitHub Actions + anthropics/claude-code-action). No Codex/Copilot. See docs/KICKOFF.md §7b.
 
 Rules: never commit secrets (.env is gitignored). Don't start implementation work outside an assigned issue.
 Full brief: docs/KICKOFF.md

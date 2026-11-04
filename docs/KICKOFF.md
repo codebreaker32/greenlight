@@ -111,6 +111,24 @@ Switch Console is a **desktop app**. It does **not** run on a headless VM. The s
 
 **Cheaper fallback** if 4 parallel sessions are too slow or costly: one `greenlight-review` agent with 4 Claude Code subagents (`include_subagents` exists on `invite_agent_to_room`). This scores lower on "Use of Switch", so use it only if needed.
 
+## 7b. Multi-agent plan on Claude only (decided Nov 4)
+
+We only have a **Claude subscription** and an **Anthropic API key**. No Codex, no Copilot. "Multi-agent" means separate agents with their own roles and identities, running on two agent runtimes inside Switch plus one on GitHub.
+
+| Agent(s) | Runtime | Auth | When |
+|---|---|---|---|
+| `greenlight-personal`, `greenlight-room` | **Claude Code** | Claude subscription (sign in via Switch Console) | MVP |
+| 2 of the 4 reviewers (e.g. `greenlight-conflict`, `greenlight-feasibility`) | **OpenCode** (open source, supported natively by Switch) configured with a Claude model | `ANTHROPIC_API_KEY` | MVP (cheap: only a provider setting) |
+| The other 2 reviewers | Claude Code | Subscription | MVP |
+| `greenlight-builder` (replaces Copilot) | Claude Code, in its own work room | Subscription | Stretch |
+| `greenlight-ci` (GitHub-side agent) | **GitHub Actions** with `anthropics/claude-code-action` | `ANTHROPIC_API_KEY` as a repo secret | Stretch |
+
+**Stretch flow, from idea to merged code:** approved decision → the room agent opens a GitHub issue from `decisions/<id>.md` → `greenlight-builder` opens a PR → `greenlight-ci` checks the PR against the decision → posts ✅/❌ back into the Slack room.
+- **Preferred way to post the result:** as its own Switch agent, via `POST /agents/{agent_id}/message` with `{room_id, content}`. This needs no live connection (`docs/official/internals/agent-protocol.md`). It requires the Switch API to be reachable from GitHub runners: open a port on the VM, ideally with HTTPS.
+- **Fallback:** the Action comments on the PR, and the room agent reads it with `gh` when someone asks.
+
+**Cost control:** use a smaller Claude model (e.g. Haiku) for reviewers and a stronger one for the room agent, which also spreads load across subscription and API rate limits. Set a monthly spending limit in the Anthropic Console. **Dropped:** Codex (needs OpenAI) and the Copilot coding agent (needs a paid plan; not assignable on the repo as of Nov 4).
+
 ## 8. MVP scope (design doc §10)
 
 **Must have:** personal room with the personal agent → 4 reviews merged into one summary → permission prompt → combined room with consent-based invites → room agent explaining per-person impact → typed vote → room closes → decision posted to the common room and saved.
@@ -190,6 +208,8 @@ Hard constraints (verified in Switch source):
 - Agents cannot create agents; addressing must be "anyone"; the task-delegation protocol is not ready, so don't use it.
 - No scheduler, no message edits; Slack shows markdown tables as raw text → use bullets.
 - Templates: follow examples/agent-templates/support-desk.template.yaml in the Switch repo.
+- Claude only: Claude Code (subscription) + OpenCode with ANTHROPIC_API_KEY for 2 reviewers. Stretch: greenlight-builder
+  (Claude Code) and greenlight-ci (GitHub Actions + anthropics/claude-code-action). No Codex/Copilot. See docs/KICKOFF.md §7b.
 
 Rules: never commit secrets (.env is gitignored). Don't start implementation work outside an assigned issue.
 Full brief: docs/KICKOFF.md
