@@ -47,6 +47,8 @@ Findings from issue #1. Everything here was tried on our setup (Switch Console v
 
 13. **Custom "session starting" message.** Switch posts a hard-coded line (`_STARTING_SESSION_MESSAGE` in `core/switch_core/delivery/recipient.py`) when an agent is addressed while its session starts. We replaced it with **"☕ Waking up… grabbing a coffee, back in a sec."** using `scripts/patch-session-message.sh`. The script patches the running `switchdash-remote-switch-1` container and restarts it; the agent controller reconnects by itself. **Re-run the script after the Switch server is updated or its containers are recreated.** A fresh Switch install shows Switch's default text.
 
+14. **No "session starting" notice at all (Nov 5).** The coffee text still left a line in the chat above every first answer. `scripts/hide-session-start-notice.sh` stops it from being posted, both from switch-core (`recipient.py`) and from the agent runner on the VM (`announceSessionStart()` in `~/.local/state/switch/sdk-host/*.mjs`, originals kept as `*.orig`). Switch still marks the message with a **👀** reaction while the agent works and shows the "Working… / Worked for Ns" card in the thread, so people get: 👀 → the answer. **Re-run the script** after a Switch server update or if Switch Console reinstalls the runner. (`patch-session-message.sh` remains as the fallback that only changes the wording.)
+
 Useful VM commands:
 ```bash
 ssh greenlight 'docker ps --format "{{.Names}}: {{.Status}}"'            # server containers
