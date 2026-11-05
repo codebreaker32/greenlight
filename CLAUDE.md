@@ -16,7 +16,10 @@ Hard constraints (verified in Switch source):
 - Agents cannot create agents; addressing must be "anyone"; the task-delegation protocol is not ready, so don't use it.
 - No scheduler, no message edits; Slack shows markdown tables as raw text → use bullets.
 - Templates: follow examples/agent-templates/support-desk.template.yaml in the Switch repo.
-- Claude only: Claude Code (subscription) + OpenCode with ANTHROPIC_API_KEY for 2 reviewers. Stretch: greenlight-builder
+- Agents (all addressing "anyone", run on the VM): juno (front door + coordinator, Claude Code), rules-agent
+  (policy + conflict, Claude Code), impact-agent (impact + feasibility, OpenCode), vote-agent (vote + decision,
+  Claude Code). Juno tags reviewers visibly in the per-idea room; humans can chime in. Personal rooms = person + juno only.
+- Claude only: Claude Code (subscription) + OpenCode with ANTHROPIC_API_KEY for impact-agent. Stretch: greenlight-builder
   (Claude Code) and greenlight-ci (GitHub Actions + anthropics/claude-code-action). No Codex/Copilot. See docs/KICKOFF.md §7b.
 
 Rules: never commit secrets (.env is gitignored). Don't start implementation work outside an assigned issue.

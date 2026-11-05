@@ -34,11 +34,10 @@ With Greenlight:
 
 | Room | Who's in it | Purpose | How it maps to Switch |
 |---|---|---|---|
-| **Personal room** | 1 person + personal agent | Draft and refine ideas privately | A one-to-one room. Create it with `create_room(channel_type="direct", …)` on Slack, or as a private channel with one user (works on every platform) |
-| **Shared room** *(nice to have)* | 2 people + agent | Quick private collaboration | `create_room(channel_type="channel_private", user_names=[a, b])` |
-| **Combined room** (one per idea) | Proposer + affected people who accepted + room agent | Explanation, discussion, vote | Created **with only the proposer**. Each person is added with `add_users_to_room` **after they accept**. Closed with `archive_room` |
-| **Review room** *(our addition)* | The 4 review agents (+ personal agent) | Where reviews run, keeping noise out of the other rooms | A private channel. The personal agent posts the idea and mentions all four reviewers by name |
-| **Common room** (main project) | Whole team | Final decisions, updates, history | A normal channel. The room agent posts the decision here, and the decision file is written to the repo |
+| **Personal room** | 1 person + `juno` only | Draft and refine ideas privately | A one-to-one room. Create it with `create_room(channel_type="direct", …)` on Slack, or as a private channel with one user (works on every platform). Every message reaches Juno automatically, no `@` needed |
+| **Shared room** *(nice to have)* | 2 people + `juno` | Quick private collaboration | `create_room(channel_type="channel_private", user_names=[a, b])` |
+| **Idea room** (one per idea; becomes the combined room) | Proposer + `juno` + `rules-agent` + `impact-agent` + `vote-agent`; affected people join after accepting | **Visible review**, then explanation, discussion and vote, all in one room | Created by Juno **with only the proposer**. Juno tags the reviewers *in the room*, so humans watch the agents work and can join in. Affected people are added with `add_users_to_room` **after they accept** and can read the full review history. Closed with `archive_room` |
+| **Common room** (main project) | Whole team + `juno` | Final decisions, updates, history; `@juno` answers questions about past decisions | A normal channel. `vote-agent` posts the decision here, and the decision file is written to the repo |
 
 ## 4. Switch facts that change the design (checked against the Switch source)
 
@@ -98,18 +97,24 @@ Switch Console is a **desktop app**. It does **not** run on a headless VM. The s
 | Sender identity on every message | Vote tallying, quorum, tie-break, room close (`archive_room`) |
 | The GitHub service connection (optional) | Saving decisions to the main project (decision file + post in common room) |
 
-## 7. Agents (all `addressing: anyone`)
+## 7. Agents (decided Nov 5: 4 agents, all `addressing: anyone`, all run on Greenlight VM)
 
-| Agent | Lives in | Job | Output |
-|---|---|---|---|
-| `greenlight-personal` | Every personal room (one agent identity serving everyone in their own one-to-one room is simplest for the MVP) | Refine the idea with the person; when ready, post it to the review room mentioning the 4 reviewers; relay the combined summary; ask permission to open a room; handle invite accept/decline | `ideas/<id>/idea.md` |
-| `greenlight-policy` | Review room | Check against `demo-data/policies/*` | ✅/⚠/❌ + one-line reasons |
-| `greenlight-conflict` | Review room | Check against `demo-data/projects/*` (ongoing work, files being changed) | ✅/⚠/❌ + who and what clashes |
-| `greenlight-impact` | Review room | Who and what is affected (teams, users, costs), using `people/*` | List of affected people + how |
-| `greenlight-feasibility` | Review room | Effort, skills, timeline | ✅/⚠/❌ + estimate |
-| `greenlight-room` | Combined rooms + common room | Explain the change per person, run the typed vote, enforce quorum and tie-break, close the room, post the decision | `decisions/<id>-<slug>.md` + a post in the common room |
+**Juno is the front door.** People only need to know one name. Juno hands work to the other agents by tagging them **visibly in the idea room**, so humans see the agents working together and can join in (e.g. `@rules-agent does this still clash if we start after the 20th?`).
 
-**Cheaper fallback** if 4 parallel sessions are too slow or costly: one `greenlight-review` agent with 4 Claude Code subagents (`include_subagents` exists on `invite_agent_to_room`). This scores lower on "Use of Switch", so use it only if needed.
+| Agent (Switch name) | Provider | Lives in | Job | Output |
+|---|---|---|---|---|
+| `juno` | Claude Code | Personal rooms, idea rooms, common room | Guide and coordinator: refines the idea privately with the person; when they're ready, opens an idea room and tags `@rules-agent @impact-agent`; summarizes the reviews; asks permission to invite affected people; handles accept/decline; explains per-person impact; answers questions about past decisions | `ideas/<id>/idea.md`, `ideas/<id>/review.md` |
+| `rules-agent` | Claude Code | Idea rooms | **Policy + Conflict:** checks company rules, compliance and security (`demo-data/policies/*`) and clashes with ongoing work and files (`demo-data/projects/*`) | ✅/⚠/❌ per check + one-line reasons |
+| `impact-agent` | **OpenCode** (Claude model, API key) | Idea rooms | **Impact + Feasibility:** who and what is affected (teams, users, costs; `people/*`), plus effort, skills and timeline | Affected people + how; ✅/⚠/❌ + estimate |
+| `vote-agent` | Claude Code | Idea rooms + common room | Runs the typed vote (`@vote-agent vote approve / reject / changes: …`), enforces quorum and tie-break, closes the room, posts the decision | `decisions/<id>-<slug>.md` + a post in the common room |
+
+**Rules for all agent instructions:**
+- Tag another agent (`@name`) **only to hand it work**. Everywhere else, write names without `@`, since a literal `@name` calls that agent and can cause loops.
+- Reviewers reply **once**, in the idea's thread, unless a human or Juno asks a follow-up.
+- Juno never quotes or reveals personal-room conversations in any other room.
+- **Register all 4 from the same Switch account** in Switch Console. Agent names are server-wide and must be lowercase.
+
+**Cheaper fallback** if sessions get too slow or costly: Juno runs both reviews itself as Claude Code subagents. This scores lower on "Use of Switch", so use it only if needed. Optional per-room nicknames: `/set-alias @juno @greenlight`.
 
 ## 7b. Multi-agent plan on Claude only (decided Nov 4)
 
@@ -117,9 +122,8 @@ We only have a **Claude subscription** and an **Anthropic API key**. No Codex, n
 
 | Agent(s) | Runtime | Auth | When |
 |---|---|---|---|
-| `greenlight-personal`, `greenlight-room` | **Claude Code** | Claude subscription (sign in via Switch Console) | MVP |
-| 2 of the 4 reviewers (e.g. `greenlight-conflict`, `greenlight-feasibility`) | **OpenCode** (open source, supported natively by Switch) configured with a Claude model | `ANTHROPIC_API_KEY` | MVP (cheap: only a provider setting) |
-| The other 2 reviewers | Claude Code | Subscription | MVP |
+| `juno`, `rules-agent`, `vote-agent` | **Claude Code** | Claude subscription (signed in on the VM) | MVP |
+| `impact-agent` | **OpenCode** (open source, supported natively by Switch) configured with a Claude model | `ANTHROPIC_API_KEY` | MVP (cheap: only a provider setting) |
 | `greenlight-builder` (replaces Copilot) | Claude Code, in its own work room | Subscription | Stretch |
 | `greenlight-ci` (GitHub-side agent) | **GitHub Actions** with `anthropics/claude-code-action` | `ANTHROPIC_API_KEY` as a repo secret | Stretch |
 
@@ -166,7 +170,7 @@ gh repo create greenlight --public --description "Idea management where agents r
 - [ ] Write the findings in `docs/SWITCH_NOTES.md` (what worked, exact commands, gotchas)
 
 **Issue 2: Preliminary: agent design, demo data and decision format**
-- [ ] Write the instructions for all 6 agents (§7) in `agents/<name>.md`, including output formats (✅/⚠/❌ lines, no markdown tables, names without `@`)
+- [ ] Write the instructions for the 4 agents (§7: juno, rules-agent, impact-agent, vote-agent) in `agents/<name>.md`, including output formats (✅/⚠/❌ lines, no markdown tables, names without `@`)
 - [ ] Define the file layout: `people/`, `ideas/<id>/{idea,review}.md`, `decisions/`, `demo-data/{policies,projects}/`
 - [ ] Write the demo data for the payment-gateway story (Priya, Sam, Alex, Riya; policies; ongoing projects)
 - [ ] Define the vote grammar and rules (approve, reject, changes; quorum; tie-break; who counts as participating)
@@ -208,7 +212,10 @@ Hard constraints (verified in Switch source):
 - Agents cannot create agents; addressing must be "anyone"; the task-delegation protocol is not ready, so don't use it.
 - No scheduler, no message edits; Slack shows markdown tables as raw text → use bullets.
 - Templates: follow examples/agent-templates/support-desk.template.yaml in the Switch repo.
-- Claude only: Claude Code (subscription) + OpenCode with ANTHROPIC_API_KEY for 2 reviewers. Stretch: greenlight-builder
+- Agents (all addressing "anyone", run on the VM): juno (front door + coordinator, Claude Code), rules-agent
+  (policy + conflict, Claude Code), impact-agent (impact + feasibility, OpenCode), vote-agent (vote + decision,
+  Claude Code). Juno tags reviewers visibly in the per-idea room; humans can chime in. Personal rooms = person + juno only.
+- Claude only: Claude Code (subscription) + OpenCode with ANTHROPIC_API_KEY for impact-agent. Stretch: greenlight-builder
   (Claude Code) and greenlight-ci (GitHub Actions + anthropics/claude-code-action). No Codex/Copilot. See docs/KICKOFF.md §7b.
 
 Rules: never commit secrets (.env is gitignored). Don't start implementation work outside an assigned issue.
