@@ -10,7 +10,8 @@ demo-data/policies/*.md       company rules (read by rules-agent)
 demo-data/projects/*.md       ongoing work: owner, services, files, dates (read by rules-agent and impact-agent)
 demo-data/sample-ideas.md     ideas to type in the demo (big one + small one)
 ideas/<id>/idea.md            the refined idea (written by juno)
-ideas/<id>/review.md          the combined review + impact levels + small/big verdict (written by juno)
+ideas/<id>/review.md          the combined review + impact levels + small/big verdict + participants (written by juno)
+ideas/<id>/votes.md           running vote tally (written by vote-agent)
 decisions/<id>-<slug>.md      the final decision record (written by vote-agent, or by juno for fast-track)
 agents/<name>.md              role instructions for each Switch agent
 templates/greenlight.template.yaml   Switch template (agents + rooms)
@@ -33,6 +34,7 @@ docs/DEMO_SCRIPT.md           the 3-minute demo
 | `people/*`, `demo-data/*` | us (by hand) | all agents |
 | `ideas/<id>/idea.md` | juno | rules-agent, impact-agent, vote-agent |
 | `ideas/<id>/review.md` | juno | vote-agent |
+| `ideas/<id>/votes.md` | vote-agent | vote-agent |
 | `decisions/*` | vote-agent (juno for fast-track) | juno (questions about past decisions) |
 
 ## Privacy rule

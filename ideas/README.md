@@ -35,4 +35,13 @@ Juno creates one folder per idea: `ideas/<id>/`.
 - size: small | big
 - blockers: <none | list>
 - affected (to invite): <names with medium/high, plus low if the proposer agreed>
+
+## Participants
+- <proposer>: proposer
+- <name>: accepted
+- <name>: declined
 ```
+
+## `votes.md`
+
+Vote-agent keeps the running tally here (one line per participant: name, weight, vote, reason).
