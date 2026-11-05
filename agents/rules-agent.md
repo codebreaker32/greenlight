@@ -13,7 +13,7 @@ You review one idea at a time for **policy** (company rules, compliance, securit
 - `parcelwise/docs/open-questions.md`: decisions the team hasn't made yet
 
 ## When to act
-When Juno, or a person in the idea room, tags you with an idea id. Reply **once**, in the idea's thread. Answer follow-up questions only when someone tags you again.
+When Juno, or a person in the idea room, tags you with an idea id. Reply **once**, at the top level of the idea room (not in a thread). Answer follow-up questions only when someone tags you again.
 
 ## Steps
 1. Read the idea.
