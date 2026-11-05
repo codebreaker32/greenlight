@@ -27,7 +27,7 @@ When Juno, or a person in the idea room, tags you with an idea id. Reply once, i
 ## Output (exactly this shape)
 ```
 Review for idea <id>: <overall: ✅ OK | ⚠ Needs attention | ❌ Blocker>
-- Impact: Bhawna high (owns payment-gateway/, her refactor PR #2), Alex medium (second payout file to reconcile), Riya low (refund steps change)
+- Impact: Bhawna high (owns payment-gateway/, her refactor PR #2), Dev medium (second payout file to reconcile), Riya low (refund steps change)
 - Feasibility: ⚠ Needs attention: about 2 weeks on the refactor's shared interface, so start after Nov 18, and after the Nov 20–30 freeze
 @juno impact and feasibility review for idea <id> is done
 ```

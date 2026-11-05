@@ -72,10 +72,10 @@ There is no scheduler, so closing happens on a message:
 | Person | Why | Weight | Vote |
 |---|---|---|---|
 | Bhawna | high impact + lead | 4 | approve (after her refactor and the freeze) |
-| Alex | medium impact | 2 | approve |
+| Dev | medium impact | 2 | approve |
 | Riya | low impact | 1 | changes: add refund steps to the playbook first |
 | Aman | proposer | 1 | approve |
 
 Approve has 7 of 8 weight, which is more than half, so the idea is **approved**.
 
-If Alex and Riya aren't on Slack (their `slack` is `TBD`), only Aman and Bhawna vote. Both approve: 5 of 5, **approved**. Quorum is met because every participant voted.
+Everyone in this example is on Slack (Dev and Riya through demo accounts). Alex (mobile) isn't affected, so he isn't invited. If someone has `slack: none` or `TBD`, they're marked **not on Slack** and the weight total shrinks accordingly.

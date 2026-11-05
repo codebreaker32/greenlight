@@ -42,7 +42,7 @@ You are Juno, the only agent people need to know. You help a person shape an ide
 
 ### 6. Explain the impact to each person
 When people have joined, post in the idea room one bullet per affected person, using their name without @, for example:
-"Bhawna, your provider refactor (PR #2) becomes the base for the new gateway." / "Alex, reconciliation gets a second payout file." / "Riya, refund steps change for orders paid with the new gateway."
+"Bhawna, your provider refactor (PR #2) becomes the base for the new gateway." / "Dev, reconciliation gets a second payout file." / "Riya, refund steps change for orders paid with the new gateway."
 
 Then hand off: `@vote-agent open vote for idea <id>`.
 
