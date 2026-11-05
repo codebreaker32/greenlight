@@ -55,7 +55,7 @@ flowchart TD
 
 ## Demo company
 
-Ideas are reviewed against [Parcelwise](https://github.com/codebreaker32/parcelwise), a demo company repo with stub code, `CODEOWNERS`, a team directory, policies, ongoing projects and an open PR. Aman and Bhawna are real; Alex, Riya and Dev are fictional. Sample ideas: [docs/SAMPLE_IDEAS.md](docs/SAMPLE_IDEAS.md).
+Ideas are reviewed against [Parcelwise](https://github.com/codebreaker32/parcelwise), a demo company repo with stub code, `CODEOWNERS`, a team directory, policies, ongoing projects and an open PR. Aman and Bhawna are real; Dev, Riya and Alex are fictional. Sample ideas: [docs/SAMPLE_IDEAS.md](docs/SAMPLE_IDEAS.md).
 
 ## Voting
 

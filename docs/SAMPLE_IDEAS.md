@@ -11,7 +11,7 @@ Expected reviews:
   - Policy ⚠: security review + PCI DSS Level 1 provider (`policies/security-review.md`, `pci-dss.md`); Finance approval for a new vendor, and the 2% fee rule is still OPEN (`vendor-approval.md`)
   - Conflict ⚠: Bhawna's provider refactor (open PR #2) changes `payment-gateway/` and checkout until Nov 18; change freeze on `payment-gateway/` Nov 20–30
 - impact-agent
-  - Impact: Bhawna high (owns `payment-gateway/`, refactor PR #2), Alex medium (second payout file to reconcile), Riya low (refund steps change for new-gateway orders). Dev isn't listed: the mobile app pays through web checkout.
+  - Impact: Bhawna high (owns `payment-gateway/`, refactor PR #2), Dev medium (second payout file to reconcile), Riya low (refund steps change for new-gateway orders). Alex isn't listed: the mobile app pays through web checkout.
   - Feasibility ⚠: about 2 weeks on the shared interface; start after the refactor and the freeze
 - Result: big change, so invites and a vote are needed. Open questions for the room: which gateway, when, who maintains it (`parcelwise/docs/open-questions.md`).
 
