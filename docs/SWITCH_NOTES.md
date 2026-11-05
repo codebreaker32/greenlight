@@ -29,6 +29,10 @@ Findings from issue #1. Everything here was tried on our setup (Switch Console v
 7. **"Persistent memory" (Advanced configuration) doesn't apply to normal sessions.** It's written as Claude Code subagent config only. Keep it off; Greenlight's memory lives in repo files.
 8. **Agent-to-agent handoff = a literal `@name` in a message.** This works (spike C). Agent instructions must write names *without* `@` everywhere except deliberate handoffs, or agents re-trigger each other.
 
+9. **Leaving a private Slack channel can archive it.** When the only human member left the personal room `dm-aman.bihari.ug23-juno`, Slack archived the channel. A later `add_users_to_room` failed with Slack error `is_archived` (switch-core log: `Failed to invite Slack user … 'error': 'is_archived'`), while Switch still listed the room as active. **Don't leave personal or idea rooms.** Mute or hide them. Recovery: archive the Switch room and create a new one (Slack may keep the old channel name reserved).
+10. **Agents may misreport tool errors.** Juno said Slack "couldn't find your account", but the real error was `is_archived`. Check the server log: `ssh greenlight 'docker logs --since 1h switchdash-remote-switch-1 2>&1 | grep -i -E "error|failed" | tail'`. Agent instructions should say: quote the exact error a tool returns.
+11. **On Slack, look people up by username, not email.** `add_users_to_room` resolves names from Switch's `external_users` table (the Slack handle recorded when the person first messaged, e.g. `aman.bihari.ug23`), and otherwise does an exact username/email match in the Slack directory. Our app has no `users:read.email` scope, so email matching never succeeds.
+
 Useful VM commands:
 ```bash
 ssh greenlight 'docker ps --format "{{.Names}}: {{.Status}}"'            # server containers
