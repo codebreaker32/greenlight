@@ -33,6 +33,17 @@ Findings from issue #1. Everything here was tried on our setup (Switch Console v
 10. **Agents may misreport tool errors.** Juno said Slack "couldn't find your account", but the real error was `is_archived`. Check the server log: `ssh greenlight 'docker logs --since 1h switchdash-remote-switch-1 2>&1 | grep -i -E "error|failed" | tail'`. Agent instructions should say: quote the exact error a tool returns.
 11. **On Slack, look people up by username, not email.** `add_users_to_room` resolves names from Switch's `external_users` table (the Slack handle recorded when the person first messaged, e.g. `aman.bihari.ug23`), and otherwise does an exact username/email match in the Slack directory. Our app has no `users:read.email` scope, so email matching never succeeds.
 
+12. **After a VM reboot, agents show "Machine offline". The agent controller doesn't come back.** Switch Console starts the VM's agent controller (`~/.local/state/switch/sdk-host/agent-controller-*.mjs`) as a plain detached process when user lingering is off (`loginctl show-user aman -p Linger` → `no`). That process doesn't survive a reboot, and Console 0.40.1 has no "Restart controller" button. Fixes applied Nov 5:
+    - `sudo loginctl enable-linger aman`, so future Console setups can use a systemd user service.
+    - Server containers set to `docker update --restart unless-stopped` (lost if Switch recreates them).
+    - Controller started by hand (same command Console uses; credentials are already in its data dir):
+      ```bash
+      SID=cf8e46cd-1f03-4bab-89d8-70934b74d06b; D=~/.local/state/switch; DD=$D/agent-controller/console-$SID
+      cd $DD && setsid nohup /usr/bin/node $D/sdk-host/agent-controller-*.mjs run --data-dir $DD         --shared-host-bundle $D/sdk-host/shared-host-*.mjs --updated-by-console >> $DD/console-controller.log 2>&1 < /dev/null &
+      ```
+      Check: `tail ~/.local/state/switch/agent-controller/console-*/console-controller.log` → "Connected to Switch", agents attached.
+    - **Decision: keep the VM running until the deadline** (about $3.60/day) rather than stop and restart it.
+
 Useful VM commands:
 ```bash
 ssh greenlight 'docker ps --format "{{.Names}}: {{.Status}}"'            # server containers
