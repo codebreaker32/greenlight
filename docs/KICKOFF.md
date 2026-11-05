@@ -139,7 +139,9 @@ We only have a **Claude subscription** and an **Anthropic API key**. No Codex, n
 
 **Nice to have:** shared two-person rooms; revision loop ("changes" vote → re-review → new vote); decision history search; a manager overview of open ideas; (from our research) appending each decision as a one-line rule to the repo's `AGENTS.md`, so coding agents follow it later.
 
-**Demo data we write ourselves:** `demo-data/policies/` (security review, PCI DSS), `demo-data/projects/` (Sam's `payment-service` refactor this sprint), `people/` (Priya, Sam, Alex, Riya: role, team, current work), and one `payment-service` stub if needed.
+> **Update (Nov 5):** demo data now lives in the Parcelwise repo, and `people/` / `demo-data/` were removed. See `docs/FILE_LAYOUT.md`.
+
+**Demo data we write ourselves (original plan):** `demo-data/policies/` (security review, PCI DSS), `demo-data/projects/` (Sam's `payment-service` refactor this sprint), `people/` (Priya, Sam, Alex, Riya: role, team, current work), and one `payment-service` stub if needed.
 
 ## 9. Open questions (design doc §13), with our suggested answers
 
@@ -147,7 +149,7 @@ We only have a **Claude subscription** and an **Anthropic API key**. No Codex, n
 |---|---|---|
 | Which chat app for the demo? | **Slack** (Mattermost as fallback, since it comes free with a remote host) | Teams can't do agent-created one-to-one rooms; Slack is familiar to judges |
 | Where does "main project" data live? | **The git repo**: `decisions/<id>-<slug>.md` + a post in the common room | Reproducible ("clone and run" is in the rubric) and readable in the README |
-| Where do policy docs and ongoing projects come from? | **Sample files we write** in `demo-data/` | Deterministic demo |
+| Where do policy docs and ongoing projects come from? | **Decided Nov 5:** the separate demo repo [Parcelwise](https://github.com/codebreaker32/parcelwise) (`~/work/demo/parcelwise`) | Realistic: stub code, CODEOWNERS, open PR |
 | Majority vote or owner veto? | **Majority of participants, a minimum quorum, owner breaks ties** (as in the doc). Veto as a later option | Matches the design; keep it simple |
 
 ## 10. GitHub repo and the two preliminary issues
@@ -207,7 +209,7 @@ Judging: Switch central 30%, reproducible 25%, creativity 25%, README+video 20%.
 
 Hard constraints (verified in Switch source):
 - No invite links; no reactions visible to agents; no custom !commands → everything is typed @agent messages.
-- Context stops at the room → share context via files (people/, ideas/, decisions/), never by reading personal rooms.
+- Context stops at the room → share context via files (greenlight ideas/, decisions/; demo company in ~/work/demo/parcelwise: team/people.yml, policies/, projects/), never by reading personal rooms.
 - Literal @name in agent output re-addresses that agent → write names without @ in summaries.
 - Agents cannot create agents; addressing must be "anyone"; the task-delegation protocol is not ready, so don't use it.
 - No scheduler, no message edits; Slack shows markdown tables as raw text → use bullets.

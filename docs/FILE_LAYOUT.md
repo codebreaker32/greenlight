@@ -4,11 +4,9 @@ Greenlight keeps all shared context in files. Switch context stops at the room, 
 
 On the VM the repo is at `~/work/greenlight/`. Agents read and write there.
 
+The **company the ideas are about** is a separate demo repo, [Parcelwise](https://github.com/codebreaker32/parcelwise), checked out at `~/work/demo/parcelwise/`. It holds the people (`team/people.yml`), ownership (`.github/CODEOWNERS`), rules (`policies/`), ongoing work (`projects/` plus open PRs) and stub code. Agents only **read** Parcelwise.
+
 ```
-people/<name>.md              one file per person: role, seniority, team, current work, Slack username
-demo-data/policies/*.md       company rules (read by rules-agent)
-demo-data/projects/*.md       ongoing work: owner, services, files, dates (read by rules-agent and impact-agent)
-demo-data/sample-ideas.md     ideas to type in the demo (big one + small one)
 ideas/<id>/idea.md            the refined idea (written by juno)
 ideas/<id>/review.md          the combined review + impact levels + small/big verdict + participants (written by juno)
 ideas/<id>/votes.md           running vote tally (written by vote-agent)
@@ -18,6 +16,7 @@ templates/greenlight.template.yaml   Switch template (agents + rooms)
 docs/VOTING.md                how joining and voting work
 docs/DECISION_FORMAT.md       the decision record format
 docs/DEMO_SCRIPT.md           the 3-minute demo
+docs/SAMPLE_IDEAS.md          ideas to type in the demo (big one + small one) and the expected reviews
 ```
 
 ## IDs and names
@@ -31,12 +30,12 @@ docs/DEMO_SCRIPT.md           the 3-minute demo
 
 | File | Written by | Read by |
 |---|---|---|
-| `people/*`, `demo-data/*` | us (by hand) | all agents |
+| Parcelwise repo (`team/people.yml`, `policies/`, `projects/`, CODEOWNERS) | us (by hand) | all agents |
 | `ideas/<id>/idea.md` | juno | rules-agent, impact-agent, vote-agent |
 | `ideas/<id>/review.md` | juno | vote-agent |
 | `ideas/<id>/votes.md` | vote-agent | vote-agent |
-| `decisions/*` | vote-agent (juno for fast-track) | juno (questions about past decisions) |
+| `decisions/*` | vote-agent (juno for fast-track); committed and pushed to GitHub | juno (questions about past decisions) |
 
 ## Privacy rule
 
-`people/*.md` holds only work facts (role, team, projects). Nothing said in a personal room is written to these files. `ideas/<id>/idea.md` holds only what the proposer agreed to share when the idea room was opened.
+Parcelwise `team/people.yml` holds only work facts (role, team, what they own). Nothing said in a personal room is written to these files. `ideas/<id>/idea.md` holds only what the proposer agreed to share when the idea room was opened.

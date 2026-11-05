@@ -17,6 +17,7 @@ After both reviews are in, Juno decides:
 1. Juno asks the proposer: "These people are affected: <names>. Invite them? (yes/no)". On no, the idea stays a private draft.
 2. For each affected person, Juno asks in **that person's own personal room**: "You're invited to idea-<id>-<slug> about <title>. Reply accept or decline."
 3. On `accept`, Juno adds them with `add_users_to_room`. On `decline`, or no answer, they are **not participating**. They don't block anything.
+4. People whose `slack` is `TBD` or `none` in `team/people.yml` aren't invited; they're marked **not on Slack** (not participating).
 
 ## 3. Votes (typed in the idea room)
 
@@ -39,7 +40,7 @@ After both reviews are in, Juno decides:
 | Impact **high** | 3 |
 | Impact **medium** | 2 |
 | Impact **low** | 1 |
-| **Senior** or **lead** (from `people/<name>.md`) | +1 |
+| `seniority: senior` or `lead` (in Parcelwise `team/people.yml`) | +1 |
 | **Proposer** | 1 (no bonus) |
 
 Impact levels come from impact-agent's review in `ideas/<id>/review.md`. Vote-agent posts every participant's weight when voting opens, so it's transparent.
@@ -57,7 +58,7 @@ There is no scheduler, so closing happens on a message:
 
 1. Add up the weight behind each option: approve, reject, changes.
 2. An option that has **more than half of the total weight cast** wins.
-3. **Tie, or no option over half:** the **project owner** (`project_owner: true` in `people/`, now Aman) decides with `@vote-agent owner decides approve|reject|changes`.
+3. **Tie, or no option over half:** the **project owner** (`project_owner: true` in Parcelwise `team/people.yml`, now Bhawna) decides with `@vote-agent owner decides approve|reject|changes`.
 4. **Blocker:** if either review has a ❌, `approve` can't win. If approve would have won, the result becomes `changes`, with the blocker as the reason.
 
 | Result | What happens |
@@ -70,9 +71,11 @@ There is no scheduler, so closing happens on a message:
 
 | Person | Why | Weight | Vote |
 |---|---|---|---|
-| Aman | high impact + senior | 4 | approve (after his refactor) |
+| Bhawna | high impact + lead | 4 | approve (after her refactor and the freeze) |
 | Alex | medium impact | 2 | approve |
 | Riya | low impact | 1 | changes: add refund steps to the playbook first |
-| Bhawna | proposer | 1 | approve |
+| Aman | proposer | 1 | approve |
 
 Approve has 7 of 8 weight, which is more than half, so the idea is **approved**.
+
+If Alex and Riya aren't on Slack (their `slack` is `TBD`), only Aman and Bhawna vote. Both approve: 5 of 5, **approved**. Quorum is met because every participant voted.

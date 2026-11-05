@@ -53,6 +53,10 @@ flowchart TD
 - Two agent runtimes side by side (Claude Code and OpenCode)
 - Switch provides rooms, identities, the Slack bridge and room history. We built the workflow: consent invites, reviews, weighted voting and decision records. TODO: add screenshots
 
+## Demo company
+
+Ideas are reviewed against [Parcelwise](https://github.com/codebreaker32/parcelwise), a demo company repo with stub code, `CODEOWNERS`, a team directory, policies, ongoing projects and an open PR. Aman and Bhawna are real; Alex, Riya and Dev are fictional. Sample ideas: [docs/SAMPLE_IDEAS.md](docs/SAMPLE_IDEAS.md).
+
 ## Voting
 
 Weighted by impact and seniority, with a fast path for small changes. See [docs/VOTING.md](docs/VOTING.md). Decisions are saved as [decisions/](decisions/) files ([format](docs/DECISION_FORMAT.md)).
@@ -63,7 +67,7 @@ TODO: step-by-step from [docs/SWITCH_NOTES.md](docs/SWITCH_NOTES.md):
 1. VM + Switch server via Switch Console (remote host)
 2. Slack app from Switch's manifest
 3. Register the 4 agents (or load [templates/greenlight.template.yaml](templates/greenlight.template.yaml))
-4. Clone this repo to `~/work/greenlight` on the VM
+4. Clone this repo to `~/work/greenlight` and Parcelwise to `~/work/demo/parcelwise` on the VM, and wire the agents ([agents/README.md](agents/README.md))
 5. Try it: [docs/DEMO_SCRIPT.md](docs/DEMO_SCRIPT.md)
 
 ## Limits
@@ -71,5 +75,6 @@ TODO: step-by-step from [docs/SWITCH_NOTES.md](docs/SWITCH_NOTES.md):
 - No scheduler: votes close on a message, not on a timer
 - Agents can't see emoji reactions, so every vote is typed
 - Slack users are looked up by username, not email
-- The Switch Console desktop app must be open for agents to start sessions
-- Demo data is sample files, not a real company system
+- The agent controller on the VM must be running (installed as a boot service: `scripts/install-controller-service.sh`); Switch Console is only needed to create or change agents
+- The session-start line is customised by patching the Switch server (`scripts/patch-session-message.sh`); a fresh Switch install shows Switch's default text
+- Demo data is a made-up company repo (Parcelwise), not a real company system
