@@ -4,14 +4,15 @@ Role instructions for the 4 Switch agents. Each file holds the **role sections o
 
 ## How it's wired on the VM
 
-| Agent | VM file | Loads |
-|---|---|---|
-| juno | `~/work/agents/juno/CLAUDE.md` | `@/home/aman/work/greenlight/agents/juno.md` (Claude Code import) |
-| rules-agent | `~/work/agents/rules-agent/CLAUDE.md` | `@/home/aman/work/greenlight/agents/rules-agent.md` |
-| vote-agent | `~/work/agents/vote-agent/CLAUDE.md` | `@/home/aman/work/greenlight/agents/vote-agent.md` |
-| impact-agent (OpenCode) | `~/work/agents/impact-agent/AGENTS.md` + `opencode.json` | `instructions: ["/home/aman/work/greenlight/agents/impact-agent.md"]` |
+Each agent's instruction file on the VM (`~/work/agents/<name>/CLAUDE.md`, or `AGENTS.md` for impact-agent, which runs on OpenCode) has the standing rules at the top. Below them, `scripts/sync-agent-roles.sh` copies in the role file from this repo.
 
-**To update an agent:** change its file here, merge to `main`, then on the VM run `cd ~/work/greenlight && git pull`, and in Slack run `/reset @<agent>`.
+**To update an agent:** change its file here and merge to `main`. Then, on the VM:
+```
+cd ~/work/greenlight && git pull && scripts/sync-agent-roles.sh
+```
+In Slack, run `/reset @<agent>` so a new session reads it.
+
+(The role text is copied in rather than `@`-imported, because Claude Code won't auto-load imports from outside the agent's folder in headless sessions.)
 
 ## Shared rules (already repeated inside each file)
 
