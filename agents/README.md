@@ -1,22 +1,22 @@
 # agents/
 
-Role instructions for the 4 Switch agents. Each file holds the **role sections only**. The standing rules (Slack only, threads, platform) are already in the agent's file on the VM.
+Role instructions for the 4 Switch agents. Each file holds the **role sections only**. The standing rules (Slack only, threads) are in each agent's own file on the VM, and that file **loads** the role file from this repo, so the repo is the single source of truth.
 
-## How to apply (on the VM)
+## How it's wired on the VM
 
-| Repo file | Paste **below** the existing sections of |
-|---|---|
-| `agents/juno.md` | `~/work/agents/juno/CLAUDE.md` |
-| `agents/rules-agent.md` | `~/work/agents/rules-agent/CLAUDE.md` |
-| `agents/impact-agent.md` | `~/work/agents/impact-agent/AGENTS.md` (OpenCode) |
-| `agents/vote-agent.md` | `~/work/agents/vote-agent/CLAUDE.md` |
+| Agent | VM file | Loads |
+|---|---|---|
+| juno | `~/work/agents/juno/CLAUDE.md` | `@/home/aman/work/greenlight/agents/juno.md` (Claude Code import) |
+| rules-agent | `~/work/agents/rules-agent/CLAUDE.md` | `@/home/aman/work/greenlight/agents/rules-agent.md` |
+| vote-agent | `~/work/agents/vote-agent/CLAUDE.md` | `@/home/aman/work/greenlight/agents/vote-agent.md` |
+| impact-agent (OpenCode) | `~/work/agents/impact-agent/AGENTS.md` + `opencode.json` | `instructions: ["/home/aman/work/greenlight/agents/impact-agent.md"]` |
 
-Then, in Slack: `/reset @juno`, `/reset @rules-agent`, `/reset @impact-agent`, `/reset @vote-agent`.
+**To update an agent:** change its file here, merge to `main`, then on the VM run `cd ~/work/greenlight && git pull`, and in Slack run `/reset @<agent>`.
 
 ## Shared rules (already repeated inside each file)
 
 - Write a literal `@name` **only** to hand work to another agent. Everywhere else, names go without `@`.
 - Use bullets, never markdown tables, in chat.
 - Verdict lines start with `✅ OK:`, `⚠ Needs attention:` or `❌ Blocker:`.
-- Shared context lives in files under `~/work/greenlight/`. Never read or quote a personal room.
+- Greenlight's own files are in `/home/aman/work/greenlight/`. The demo company (Parcelwise) is in `/home/aman/work/demo/parcelwise/`. Never read or quote a personal room.
 - If a tool returns an error, quote the exact error text. Never guess.

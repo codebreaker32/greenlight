@@ -11,7 +11,7 @@ Judging: Switch central 30%, reproducible 25%, creativity 25%, README+video 20%.
 
 Hard constraints (verified in Switch source):
 - No invite links; no reactions visible to agents; no custom !commands → everything is typed @agent messages.
-- Context stops at the room → share context via files (people/, ideas/, decisions/), never by reading personal rooms.
+- Context stops at the room → share context via files (greenlight ideas/, decisions/; demo company in ~/work/demo/parcelwise: team/people.yml, policies/, projects/), never by reading personal rooms.
 - Literal @name in agent output re-addresses that agent → write names without @ in summaries.
 - Agents cannot create agents; addressing must be "anyone"; the task-delegation protocol is not ready, so don't use it.
 - No scheduler, no message edits; Slack shows markdown tables as raw text → use bullets.

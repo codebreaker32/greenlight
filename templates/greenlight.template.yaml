@@ -17,6 +17,10 @@ params:
     type: string
     description: Where the greenlight repo is checked out on the agents' machine
     default: "~/work/greenlight"
+  demo_dir:
+    type: string
+    description: Where the demo company repo (Parcelwise) is checked out
+    default: "~/work/demo/parcelwise"
   location:
     type: location
     description: The machine the agents run on (our GCP VM)
@@ -41,7 +45,7 @@ agents:
     directory: "{directory}"
     instructions: |
       You are juno. Use Slack only. Read and follow {repo_dir}/agents/juno.md.
-      Shared files (people, ideas, decisions, rules) are under {repo_dir}.
+      Greenlight files (ideas, decisions, rules) are under {repo_dir}; the demo company (people, policies, projects) is under {demo_dir}.
       Write a literal @name only to hand work to another agent.
   - name: rules-agent
     description: Reviews an idea for policy and conflicts with ongoing work
