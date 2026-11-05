@@ -1,0 +1,87 @@
+# Greenlight: four agents and the common room.
+#
+# Shape follows Switch's examples/agent-templates/support-desk.template.yaml.
+# Switch Console creates the `agents:`; the server creates the room from
+# `rooms:`. Idea rooms (idea-<id>-<slug>) and personal rooms are created by
+# juno at runtime, so they are not listed here.
+#
+# Agent names are fixed (not prefixed), because the instructions hand work
+# to each other by these exact names. Each agent's real instructions live in
+# the repo (agents/<name>.md) so there is one source of truth.
+# Status: draft. Not yet loaded through Console; see docs/SWITCH_NOTES.md for
+# the setup that is live today.
+version: 1
+
+params:
+  repo_dir:
+    type: string
+    description: Where the greenlight repo is checked out on the agents' machine
+    default: "~/work/greenlight"
+  location:
+    type: location
+    description: The machine the agents run on (our GCP VM)
+    default: local
+    input: advanced
+  directory:
+    type: directory
+    description: Each agent's working directory, a folder of its own.
+    default: "{$agents_dir}/{agent}"
+    input: advanced
+  bridge:
+    type: bridge
+    description: Where the rooms are mirrored (Slack for us).
+    default: [$first]
+
+agents:
+  - name: juno
+    description: Front door. Shapes ideas in private, opens idea rooms, runs reviews and consent invites
+    addressing: anyone
+    provider: claude
+    location: "{location}"
+    directory: "{directory}"
+    instructions: |
+      You are juno. Use Slack only. Read and follow {repo_dir}/agents/juno.md.
+      Shared files (people, ideas, decisions, rules) are under {repo_dir}.
+      Write a literal @name only to hand work to another agent.
+  - name: rules-agent
+    description: Reviews an idea for policy and conflicts with ongoing work
+    addressing: anyone
+    provider: claude
+    location: "{location}"
+    directory: "{directory}"
+    instructions: |
+      You are rules-agent. Use Slack only. Read and follow {repo_dir}/agents/rules-agent.md.
+      Write a literal @name only to hand work to another agent.
+  - name: impact-agent
+    description: Reviews an idea for impact on people and feasibility (runs on OpenCode)
+    addressing: anyone
+    provider: opencode
+    location: "{location}"
+    directory: "{directory}"
+    instructions: |
+      You are impact-agent. Use Slack only. Read and follow {repo_dir}/agents/impact-agent.md.
+      Write a literal @name only to hand work to another agent.
+  - name: vote-agent
+    description: Runs the typed weighted vote, saves the decision and closes the room
+    addressing: anyone
+    provider: claude
+    location: "{location}"
+    directory: "{directory}"
+    instructions: |
+      You are vote-agent. Use Slack only. Read and follow {repo_dir}/agents/vote-agent.md
+      and {repo_dir}/docs/VOTING.md. Write a literal @name only to hand work to another agent.
+
+group:
+  name: "Greenlight"
+  description: Idea management where agents review proposals and affected people decide together
+
+rooms:
+  - name: "greenlight"
+    description: Common room. Decisions, updates and history for the whole project
+    bridge: "{bridge}"
+    agents: ["juno", "vote-agent"]
+    users: ["{$creator}"]
+    kickoff: |
+      @juno this is the common room. Say hello in one line and explain that
+      people can message you privately with an idea, and that decisions will
+      be posted here.
