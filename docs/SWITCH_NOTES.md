@@ -47,9 +47,9 @@ Run each in Slack, in the common room (e.g. `#greenlight`) where `juno` has been
 | Spike | What to type in Slack | Pass if | Result |
 |---|---|---|---|
 | **C. Visible handoff** | `@juno ask rules-agent and impact-agent to each say hello and name the tool they run on` | Juno tags both; both reply in the room | ✅ Nov 5: both replied (Claude Code, OpenCode) |
-| **A. Personal room** | `@juno create a private one-to-one room for just me and you (channel_type direct), then say hi there` | A private channel `dm-<you>-juno` appears; in it, plain messages (no `@`) get answers | ⬜ |
-| **B. Consent invite** | `@juno create a private room named idea-test with only me in it. Then ask <teammate's Slack name> in this room whether they accept an invite to it, and add them with add_users_to_room only if they reply "accept"` | Room created with only you; teammate is added **only after** typing "accept" | ⬜ |
+| **A. Personal room** | `@juno create a private one-to-one room for just me and you (channel_type direct), then say hi there` | A private channel `dm-<you>-juno` appears; in it, plain messages (no `@`) get answers | ✅ Nov 5: `dm-aman.bihari.ug23-juno` created after confirmation; answers without `@`. Re-check threads after `/reset @juno` |
+| **B. Consent invite** | `@juno create a private room named idea-test with only me in it. Then ask <teammate's Slack name> in this room whether they accept an invite to it, and add them with add_users_to_room only if they reply "accept"` | Room created with only you; teammate is added **only after** typing "accept" | ⚠️ Partial: username lookup works (`aman.bihari.ug23` → `U0C…`); email doesn't. Invite failed with Slack `is_archived` (channel archived after its only member left). Re-test with Bhawna on a fresh room |
 | **D. Close a room** | In `idea-test`: `@juno archive this room` | Room is archived in Switch and the Slack channel is archived | ⬜ |
-| **D2. Names** | `@juno what username do you see for me and for <teammate>?` | The names Juno sees are the ones `create_room` / `add_users_to_room` accept (A and B succeeded using them) | ⬜ |
+| **D2. Names** | `@juno what username do you see for me and for <teammate>?` | The names Juno sees are the ones `create_room` / `add_users_to_room` accept (A and B succeeded using them) | ✅ Juno sees `aman.bihari.ug23`; that name resolves for `add_users_to_room` |
 
 Anything that fails: write the exact error Juno reports here; it decides the fallback in `docs/KICKOFF.md` §4.
