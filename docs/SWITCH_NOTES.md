@@ -44,6 +44,8 @@ Findings from issue #1. Everything here was tried on our setup (Switch Console v
       Check: `tail ~/.local/state/switch/agent-controller/console-*/console-controller.log` → "Connected to Switch", agents attached.
     - **Decision: keep the VM running until the deadline** (about $3.60/day) rather than stop and restart it.
 
+13. **Custom "session starting" message.** Switch posts a hard-coded line (`_STARTING_SESSION_MESSAGE` in `core/switch_core/delivery/recipient.py`) when an agent is addressed while its session starts. We replaced it with **"☕ Waking up… grabbing a coffee, back in a sec."** using `scripts/patch-session-message.sh`. The script patches the running `switchdash-remote-switch-1` container and restarts it; the agent controller reconnects by itself. **Re-run the script after the Switch server is updated or its containers are recreated.** A fresh Switch install shows Switch's default text.
+
 Useful VM commands:
 ```bash
 ssh greenlight 'docker ps --format "{{.Names}}: {{.Status}}"'            # server containers
