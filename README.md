@@ -1,5 +1,7 @@
 # Greenlight
 
+**Demo video (2 min):** https://youtu.be/Yquy1DtvqGM  ·  **Blog post:** [docs/blog](docs/blog/README.md)
+
 Idea management where agents review proposals and the affected people decide together. Built on [Switch](https://github.com/sandbox-quantum/switch) for the Flip the Switch Hackathon (WeMakeDevs × DevTools Academy × Switch), Track 01: Best Business Workflow.
 
 A person refines an idea privately with Juno, their personal agent. Two review agents check it for **policy**, **conflicts**, **impact** and **feasibility**. With the proposer's permission, the affected people are invited to an idea room, where Juno explains how the change affects each of them. They vote, and the decision is saved to the main project.

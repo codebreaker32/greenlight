@@ -2,7 +2,7 @@
 
 [![Greenlight: an interoffice routing slip addressed to the hackathon judges, stamped WELCOME](https://raw.githubusercontent.com/codebreaker32/greenlight/main/docs/blog/card-hello.png)](https://github.com/codebreaker32/greenlight)
 
-*Built by Aman and Bhawna for the Flip the Switch hackathon (WeMakeDevs × DevTools Academy × Switch). Demo video: [YOUTUBE_LINK](YOUTUBE_LINK). Code: [github.com/codebreaker32/greenlight](https://github.com/codebreaker32/greenlight).*
+*Built by Aman and Bhawna for the Flip the Switch hackathon (WeMakeDevs × DevTools Academy × Switch). Demo video: [watch on YouTube](https://youtu.be/Yquy1DtvqGM). Code: [github.com/codebreaker32/greenlight](https://github.com/codebreaker32/greenlight).*
 
 ## The problem: good ideas die in DMs
 
