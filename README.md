@@ -1,6 +1,6 @@
 # Greenlight
 
-**Demo video (2 min):** https://youtu.be/Yquy1DtvqGM  ·  **Blog post:** [docs/blog](docs/blog/README.md)
+**Demo video (2 min):** https://youtu.be/Yquy1DtvqGM
 
 Idea management where agents review proposals and the affected people decide together. Built on [Switch](https://github.com/sandbox-quantum/switch) for the Flip the Switch Hackathon (WeMakeDevs × DevTools Academy × Switch), Track 01: Best Business Workflow.
 
